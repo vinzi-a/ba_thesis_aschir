@@ -1,0 +1,4 @@
+classes=1 /mnt/c/Users/vinze/Dropbox/Universität/8.Bachelorarbeit/yolo2/PyTorch-YOLOv3/data/custom_rot/class.names
+train=./data/custom_rot/train.txt
+valid=./data/custom_rot/valid.txt
+names=data/custom_rot/classes.names

@@ -1,0 +1,4 @@
+classes= 1
+train=data/custom_philo_generated/train.txt
+valid=data/custom_philo_generated/valid.txt
+names=data/custom_philo_generated/classes.names
