@@ -12,7 +12,15 @@ For following this souce code, clone your repository with:
 git clone https://github.com/vinzi-a/ba_thesis_aschir.git
 cd ba_thesis_aschir
 ```
-
+Before isntalling all the required packages create a virtual environment:
+ ```sh
+python -m venv yolov3 # create a venv
+source yolov3/bin/activate # activate it
+```
+Use this command for dactivating your virtual environment if necessary: 
+```sh 
+deactivate 
+```
 ### for filopodia detection
 
 follow: *yolov3.ipynb* for the yolov3 implementation on filopodia tip detection by Vinzent Aschir
@@ -20,9 +28,6 @@ for general instructions follow: general_instruction.md  from: https://github.co
 
 
 ## sources
-
-## implemantation sources: 
-## Sources  
 
 <a name="q1"></a> [1] J. Redmon, "YOLO: Real-Time Object Detection," 2016. [Online]. Available: [https://pjreddie.com/darknet/yolo/]
 (https://pjreddie.com/darknet/yolo/). [Accessed: 14-Mar-2025].
@@ -33,10 +38,7 @@ for general instructions follow: general_instruction.md  from: https://github.co
 
 and dataframe for *config/yolov3-tiny-custom.cfg* from https://github.com/GunjanChourasia/pytorch-yolo-v3-custom?tab=readme-ov-file
 and code from Eric Reifenstein,
-<p align="center"><img src="https://github.com/eriklindernoren/PyTorch-YOLOv3/raw/master/assets/giraffe.png" width="480"\></p>
-<p align="center"><img src="https://github.com/eriklindernoren/PyTorch-YOLOv3/raw/master/assets/dog.png" width="480"\></p>
-<p align="center"><img src="https://github.com/eriklindernoren/PyTorch-YOLOv3/raw/master/assets/traffic.png" width="480"\></p>
-<p align="center"><img src="https://github.com/eriklindernoren/PyTorch-YOLOv3/raw/master/assets/messi.png" width="480"\></p>
+<p align="center"><img src="https://github.com/vinzi-a/ba_thesis_aschir/visualisation/R6_P35_5.jpg" width="500"\></p>
 
 <p align="center"><img src="https://github.com/GunjanChourasia/pytorch-yolo-v3-custom?tab=readme-ov-file" width="480"\></p>
 
