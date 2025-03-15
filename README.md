@@ -5,8 +5,8 @@ This project is part of the bachelor's thesis of Vinzent Aschir. The correspondi
 
 To initialize YOLOv3, the implementation of [[2]](#q2) was used and embetted in this project. YOLOv4 and YOLOv7 weights are also compatible with this implementation.
 
-<p align="center"><img src="https://raw.githubusercontent.com/vinzi-a/ba_thesis_aschir/visualisation/R6_P35_5.jpg" width="480"\></p>
-
+<p align="center"><img src="https://github.com/vinzi-a/ba_thesis_aschir/blob/main/visualisation/R6_P35_5.jpg?raw=true" width="480"\></p>
+![alt text](https://github.com/vinzi-a/ba_thesis_aschir/blob/main/visualisation/R6_P35_5.jpg?raw=true)
 ## Installation
 For following this souce code, clone your repository with: 
 
