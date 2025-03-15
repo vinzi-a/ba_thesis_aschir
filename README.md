@@ -4,7 +4,9 @@ In this GitHup, you will learn how to apply the YOLOv3 object detection algorith
 This project is part of the bachelor's thesis of Vinzent Aschir. The corresponding paper and the analysed data are avaidable upon request. 
 
 To initialize YOLOv3, the implementation of [[2]](#q2) was used and embetted in this project. YOLOv4 and YOLOv7 weights are also compatible with this implementation.
- 
+
+<p align="center"><img src="https://raw.githubusercontent.com/vinzi-a/ba_thesis_aschir/visualisation/R6_P35_5.jpg" width="480"\></p>
+
 ## Installation
 For following this souce code, clone your repository with: 
 
@@ -16,31 +18,35 @@ Before isntalling all the required packages create a virtual environment:
  ```sh
 python -m venv yolov3 # create a venv
 source yolov3/bin/activate # activate it
+pip3 install jupyter
 ```
 Use this command for dactivating your virtual environment if necessary: 
 ```sh 
 deactivate 
 ```
-### for filopodia detection
+Please install jupypter in your virtual environment to be able to follow the implemented jupyter notepads
+```sh 
+pip install jupyter 
+```
+##  **Filopodia Detection in *Drosophila*** 
+For the YOLOv3 implementation on **filopodia tip detection**, follow the Jupyter Notebook:
+🪰 **[yolov3.ipynb](./yolov3.ipynb)** – Implementation by Vinzent Aschir on the *Drosophila* dataset. 
 
-follow: *yolov3.ipynb* for the yolov3 implementation on filopodia tip detection by Vinzent Aschir
-for general instructions follow: general_instruction.md  from: https://github.com/eriklindernoren/PyTorch-YOLOv3
+## **General YOLOv3 Instructions** 
+For general YOLOv3 instructions, refer to:
+📜 **[general_instruction.md](./general_instruction.md)** from [2](#q2)
+
+## sources 🔗
+
+<a name="q1"></a> **[1] 🔗 initial YOLOv3-algorithm**: [P. J. Reddie](https://pjreddie.com/darknet/yolo/) 
+
+<a name="q2"></a> **[2] 🔗 followed  YOLOv3-implementation**: [E. Lindernoren](https://github.com/eriklindernoren/PyTorch-YOLOv3) 
+
+<a name="q2"></a> [3] 🔗 **CustomYOLOv3-custom-Tiny model arichtecture**: [Gunjan Chourasia](https://github.com/GunjanChourasia/pytorch-yolo-v3-custom?tab=readme-ov-file) 
+
+<a name="q2"></a> [4] 🖥️ **Code von Eric Reifenstein**  
 
 
-## sources
-
-<a name="q1"></a> [1] J. Redmon, "YOLO: Real-Time Object Detection," 2016. [Online]. Available: [https://pjreddie.com/darknet/yolo/]
-(https://pjreddie.com/darknet/yolo/). [Accessed: 14-Mar-2025].
-<p align="center"><img src="https://github.com" width="480"\></p>
-
-<a name="q2"></a> [2] E. Lindernoren, "PyTorch-YOLOv3," GitHub repository, 2018. [Online]. Available: [https://github.com/eriklindernoren/PyTorch-YOLOv3](https://github.com/eriklindernoren/PyTorch-YOLOv3). [Accessed: 14-Mar-2025].
-
-
-and dataframe for *config/yolov3-tiny-custom.cfg* from https://github.com/GunjanChourasia/pytorch-yolo-v3-custom?tab=readme-ov-file
-and code from Eric Reifenstein,
-<p align="center"><img src="https://github.com/vinzi-a/ba_thesis_aschir/visualisation/R6_P35_5.jpg" width="500"\></p>
-
-<p align="center"><img src="https://github.com/GunjanChourasia/pytorch-yolo-v3-custom?tab=readme-ov-file" width="480"\></p>
 
 
 ## contact
