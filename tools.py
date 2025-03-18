@@ -27,9 +27,17 @@ def vis_picture(filename="R3_P35_22_90",
                 ac_d=None
 ):
    #catch input errors
-    if filename.endswith('.jpg') or filename.endswith('.png'): #check if the filename got also its ending. 
+    if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.txt'): #check if the filename got also its ending. 
         filename= filename[:-len('.jpg')]
-        
+    is_numeric_filename = filename.isdigit()
+
+   # Check if pred_label_path contains the filename
+    if pred_label_path is not None:
+        pred_label_file = f"{pred_label_path}/{filename}.txt"
+        if not os.path.exists(pred_label_file):
+            print(f"Warning: Predicted label file not found for {filename} in {pred_label_path}. Continuing as if no predicted labels were given.")
+            pred_label_path = None
+
    #setting parameters 
     image=f"{image_path}/{filename}.jpg"
     label=f"{label_path}/{filename}.txt"
@@ -90,16 +98,16 @@ def vis_picture(filename="R3_P35_22_90",
 
             start_point = (int(x0), int(y0))
             end_point = (int(x1), int(y1))
-            cv2.rectangle(image, start_point, end_point, color=(0, 255, 0), thickness=1)
+            cv2.rectangle(image, start_point, end_point, color=(0, 255, 0), thickness=2)
     
    # drawing of the midpoints of the bounding boxes
     mid_points = np.c_[(np.array(x) * scalex), (np.array(y) * scaley)]
     for mitte in mid_points: 
-        cv2.circle(image, (int(mitte[0]), int(mitte[1])), 2, color=(0,255, 0), thickness=2)
+        cv2.circle(image, (int(mitte[0]), int(mitte[1])), 1 if is_numeric_filename else  2, color=(0,255, 0), thickness=1 if is_numeric_filename else  2)
 
-        #for finding the best accepted distance in mid_points: 
-        #if ac_d is not None and bounding_box is not None:
-        #   cv2.circle(image, (int(mitte[0]), int(mitte[1])), radius=ac_d, color=(0, 255,0), thickness=1)
+   # for finding the best accepted distance in mid_points: 
+    if ac_d is not None and bounding_box is False:
+        cv2.circle(image, (int(mitte[0]), int(mitte[1])), radius=ac_d, color=(0, 255,0), thickness=1)
 
    # drawing of the predicted points. 
     if pred_label_path is not None:
@@ -120,7 +128,7 @@ def vis_picture(filename="R3_P35_22_90",
                 x0 = (x2[i] - w2[i] / 2) * scalex
                 x1 = (x2[i] + w2[i] / 2) * scalex
                 y0 = (y2[i] - h2[i] / 2) * scaley
-                y1 = (y2[i] + h2[i] / 2) 
+                y1 = (y2[i] + h2[i] / 2) * scaley 
                 start_point = (int(x0), int(y0))
                 end_point = (int(x1), int(y1))
                 cv2.rectangle(image, start_point, end_point, color=(255, 165, 0), thickness=1)
@@ -128,7 +136,7 @@ def vis_picture(filename="R3_P35_22_90",
        # drawing of the midpoints of the predicted points 
         mid_points = np.c_[(np.array(x2) * scalex), (np.array(y2) * scaley)]
         for mitte in mid_points: 
-            cv2.circle(image, (int(mitte[0]), int(mitte[1])), 2, color=(255, 165, 0), thickness=2)
+            cv2.circle(image, (int(mitte[0]), int(mitte[1])), 1 if is_numeric_filename else  2, color=(255, 165, 0), thickness=1 if is_numeric_filename else 2)
         
    # Add a legend if the picture has enough pixels for displaying the legend
     min_size = 250  # Minimum size in pixels to display the legend  
