@@ -44,24 +44,26 @@ def vis_picture(filename="R3_P35_22_90",
 
    # check the given paths contain the right files
     if image is None:
-        raise FileNotFoundError(f"Bild nicht gefunden: {image_path}") 
+        raise FileNotFoundError(f"img file not found: {image_path}") 
     if not os.path.exists(label):
-        raise FileNotFoundError(f"Labeldatei nicht gefunden: {label}")
+        raise FileNotFoundError(f"label file not found: {label}")
     
-    if not output_path.startswith("/"): 
-        output_path = f"./{output_path}"
-    output=f"{output_path}/{filename}.jpg" 
-    if bounding_box:
-        output=f"{output_path}/{filename}_with_bounding_boxes.jpg" 
     if output_path is not None: 
+        if not output_path.startswith("/") and not None: 
+            output_path = f"./{output_path}"
+
+        if bounding_box:
+            output=f"{output_path}/{filename}_with_bounding_boxes.jpg" 
+        else: 
+            output=f"{output_path}/{filename}.jpg" 
+
         if not os.path.exists(output_path):
             os.makedirs(output_path)
-            print(f"Ausgabeverzeichnis erstellt: {output_path}")   
+            print(f"created the output reposistory: {output_path}")   
 
     if pred_label_path is not None:
         pred_label=f"{pred_label_path}/{filename}.txt"
     
-
    # load the picture 
     image = cv2.imread(image) 
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
@@ -163,9 +165,9 @@ def vis_picture(filename="R3_P35_22_90",
             cv2.putText(image, text, (hitbox_x + 5, hitbox_y + hitbox_height - 5), font, font_scale, font_color, thickness)
 
    # save the picture
-    if output is not None: 
+    if output_path is not None: 
         cv2.imwrite(output, image)
-        if show and output is not None:
+        if show:
             print(f"Image saved: {output_path}")
    
    # show
@@ -327,22 +329,14 @@ def write_train_valid(
     f1.close()
     f2.close()
     return nrep, val, cust_only
-#To DO: The issue is that we are not only doing the statistics here of the points, we are also doing the prediction. 
-# do we outsource the prediction to another function? storing them in a file so we can also visualize them with the visualise function? 
 
-#in the statistics: we should look ip in the matrix which coloumn didnt didnt got a minimum. that we can mark all the points in a different color for example that were over detected. 
-#we can give as an output then the number of overdetected points. 
-#we can also give the number of points that were not detected. 
-#later we an build an extimator which points were well detected but not right in the given data? 
-# check if in bounding box is something white? -> claim point as over detected -> no show the picture and add the point to the given data. 
- 
 def detect_picture(filename="R1_P35_8_90",
                    img_path = "./data/custom_rot/images",
                    pred_label_path = "./data/custom_rot/predicted_labels2",
                    model = None, #models.load_model("config/yolov3-tiny-custom.cfg", "data/custom_philo_generated/checkpoints100/yolov3_ckpt_100.pth"),
                    conf_thres=0.01,
                    nms_thres=0.1,
-                   accepted_distance = 35, # how many pixels are allowed between annotated and predicted point to be wrong?
+                   accepted_distance = 15, # how many pixels are allowed between annotated and predicted point to be wrong?
                    stat_all_pics= None, # for statistics is there an statistix object to store over every picture? 
                    output=None, # for visualisation: where should we store the visualized picture? None is possible! 
                    bounding_box = False, # for visualisation: should we show the bounding box?
@@ -350,7 +344,6 @@ def detect_picture(filename="R1_P35_8_90",
                    ac_d = None):
 
     #catching common errors
-
     if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.txt'): #check if the filename got also its ending. 
         filename= filename[:-len('.jpg')]
 
@@ -359,20 +352,23 @@ def detect_picture(filename="R1_P35_8_90",
     if pred_label_path.endswith('.txt'):
         raise TypeError("in the variable pred_label_path should contain only the directory not specific files.")
     
+    if not os.path.exists(pred_label_path) and not None: 
+        os.makedirs(pred_label_path)
+        if show:  
+            print(f"created the output reposistory: {pred_label_path}") 
+
     if img_path.endswith('.txt'):
         raise TypeError("in the variable img_path should contain only the directory not specific files.")
 
     if not os.path.exists(pic_path):
             raise FileNotFoundError(f"Bild nicht gefunden: {pic_path}")
- 
+
     #statistics inizialisation: 
-    # if stat_all_pics is None: 
-    #         stat_all_pics = statistix()
     stat = stat_pic() #create a statistic object for one pic 
 
     if 'R3' not in filename: # heel filopodia are not annotated in the R3 manual data (this data is incomplete)
     #parameters: 
-        
+
         #load the image
         img = cv2.imread(pic_path)#.split('\n')[0]
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -414,7 +410,7 @@ def detect_picture(filename="R1_P35_8_90",
         if pred_label_path is None:
             pred_label_path = original_label_path.replace('labels', 'predicted_labels')
         else: 
-            if not os.path.exists(pred_label_path): ### sollte das nicht evtl in eine übergeordnete funktion die nicht per bild geht? 
+            if not os.path.exists(pred_label_path):
                 print(f"Directory created: {pred_label_path}")
             
             pred_label_path_file = os.path.join(pred_label_path, filename) + '.txt'
@@ -429,7 +425,6 @@ def detect_picture(filename="R1_P35_8_90",
             #print(f"Predicted labels saved: {pred_label_path_file}") ### evtl. weglassen man muss nicht alles anzeigen. 
     
     #let's do the statistics:
-        
         if not isinstance(stat_all_pics,statistix) and stat_all_pics is not None:
             raise TypeError("stat_all_pics has not the input of a statistix object")
 
@@ -442,6 +437,7 @@ def detect_picture(filename="R1_P35_8_90",
             
         if show: 
             stat.print_values() 
+
         if show and stat_all_pics is not None: 
             stat_all_pics.print_values() ### do we need them twice? maybe only per picture?
         
