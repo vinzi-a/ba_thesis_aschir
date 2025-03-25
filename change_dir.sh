@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Vinzent Aschir 18.10.2024: 
+#Vinzent Aschir 18.01.2025: 
 #file to change all the content from the origin directory to the future directory with deleting the old directory if wished"   
 
 # ./change_dir.sh true data/custom_philo_generated data/custom_philo_generated_resized false
@@ -66,7 +66,7 @@ for file in $all_files; do
     i=$(($i+1)) 
 done 
 
-wait
+wait # waiting for all the subprocesses 
 chmod -R 777 $future_dir
 echo -ne "\n"
 echo "all $i files copied from $origin_dir to $future_dir"; 

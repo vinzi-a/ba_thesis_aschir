@@ -8,7 +8,8 @@ import tensorflow as tf
 
 #for tracking the compilation time
 start_time = datetime.now()
-# Parse command-line arguments
+
+# Parse command-line arguments 
 parser = argparse.ArgumentParser()
 parser.add_argument('--model', type=str, required=True, help='Path to model config file')
 parser.add_argument('--data', type=str, required=True, help='Path to data file')
@@ -26,12 +27,15 @@ parser.add_argument('--logdir', type=str, default='logs', help='Directory for tr
 parser.add_argument('--seed', type=int, default=-1, help='Makes results reproducible. Set -1 to disable.')
 args = parser.parse_args()
 print(args)
+
 #train.run() -h
 model = models.load_model(args.model)
 model.to("cuda")
 print(f"training is running on: {next(model.parameters()).device}")
+# There is a reload of the model in pytorchyolo/train.py after calling train.run() to have specific instrucitons how to load the model we should also try out to adjust it in this file. 
+
 # Train the model
-train.run()
+train.run() 
 
 #stop the compilation time
 end_time = datetime.now()
@@ -49,7 +53,7 @@ print('Duration:', duration_str)
 if os.path.exists("train.tmp"):
     raise FileExistsError(f"The file {tmp_file_path} already exists remove it first before creating.")
 
-# Write the duration to train.tmp file
+# Write the duration to train.tmp file to transmit the information to yolov3.ipynb for storing. 
 with open('train.tmp', 'w') as f:
     f.write(duration_str)
 

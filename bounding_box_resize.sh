@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Vinzent Aschir 18.10.2024: file to change all the dirs 
+#Vinzent Aschir 18.01.2025: file to change all the dirs 
 
 #this script needs the generated data to be in the format: [number].txt" to give it a different bounding box size
 #take care that the bounding box values are given relatively to the image size. 

@@ -9,13 +9,11 @@ import glob
 from scipy.spatial import distance
 from tools import * 
 from pytorchyolo import detect, models 
+
 #To Do: 
-# kann man peaks auch nummerieren? um sie besser besprechen zu können. oder abweichungen zu bemerken.
+# in vis_pic: enumerate detections and draw the number in the image for better distinquishinig them. 
+# maybe showing different classes in different colors. 
 
-#falls es mehrere Klassen gibt, dann sollten sie in unterschiedlichen Farben eingetragen werden. 
-
-# function for visualizing the images with the bounding boxes
-# if you wanna see the image with set show=True, make sure to call this function in a jupyter notebook. 
 #needs numpy, opencv, cv2 and os
 def vis_picture(filename="R3_P35_22_90",
                 image_path="data/custom_rot/images", 
@@ -173,7 +171,7 @@ def vis_picture(filename="R3_P35_22_90",
    # show
     if show:
         print("")# print(f"your input is: filename= {filename}, image_path= {image_path}, label_path= {label_path}, output_path= {output_path}, show= {show}")
-        plt.figure() #diese Zeile ist notwendig, damit das Bild in einem neuen Fenster geöffnet wird. 
+        plt.figure() #this is necessary to open each cell individually to not overwrite the previous shown image. 
         plt.imshow(image)
 
 #this class is used to store the values of a comparison between predicted and manual points over all pictures.
@@ -282,12 +280,6 @@ class stat_pic(statistix):
         if self.annotated_pic == 0: 
             print("TP: ", round(self.TP,5), ", FP: ", self.FP, ", FN: ", self.FN, ", OD: ", self.OD, ", NH: ", self.NH, ", Sensitivity: ", round(self.sensitivity,6), ", predicted points: ", self.pred_p, ", manual points: ", self.manual_p)
 
-    #here we should add the definition of the statistic.    
-    def explain(self):
-        print("This class is used to evaluate the prediction between the manual and prediction points based on a allowed bias. \n")
-        print("Test: The test is evaluated as positive for predicted point i if a predicted point i is in the minimum distance range to a manual point j.\n")
-        print("Assessment: A prediction is assessed as true/correct if predicted point i is at the minimum distance to manual point j and point i is the next closest to point j. A prediction is assessed as false if this is not the case. \n")
-        print("This class is used to calculate the values of a comparison between predicted and manual points. The values are TP, FP, FN, OP, Sensitivity, predicted points and manual points. The values are calculated with the calculate method. The values can be printed with the print_values method. The values can be accessed with the get_values method. ")
 
 def rotate_coord(x, y, angle):
     """
@@ -297,7 +289,7 @@ def rotate_coord(x, y, angle):
 
 # write train and valid file: (90% train, 10% validation)
 def write_train_valid(
-    directory="/mnt/c/Users/vinze/Dropbox/Universität/8.Bachelorarbeit/yolo2/PyTorch-YOLOv3/data/custom_rot", 
+    directory="./data/custom_rot", 
     val=0.1, # amount of data in the validation set
     cust_only=True, # can the validation set contain custom data? 
     seed=42):
@@ -343,7 +335,7 @@ def detect_picture(filename="R1_P35_8_90",
                    show = True,
                    ac_d = None):
 
-    #catching common errors
+   #catching common errors
     if filename.endswith('.jpg') or filename.endswith('.png') or filename.endswith('.txt'): #check if the filename got also its ending. 
         filename= filename[:-len('.jpg')]
 
@@ -363,27 +355,26 @@ def detect_picture(filename="R1_P35_8_90",
     if not os.path.exists(pic_path):
             raise FileNotFoundError(f"Bild nicht gefunden: {pic_path}")
 
-    #statistics inizialisation: 
+   #statistics inizialisation: 
     stat = stat_pic() #create a statistic object for one pic 
 
-    if 'R3' not in filename: # heel filopodia are not annotated in the R3 manual data (this data is incomplete)
-    #parameters: 
+    if 'R3' not in filename: # heel filopodia are not annotated in the R3 manual data (this data is incomplete) 
 
-        #load the image
+       #load the image
         img = cv2.imread(pic_path)#.split('\n')[0]
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-        #get the absolute heights and widths of the image to scale the relative numbers back to the original size
+       #get the absolute heights and widths of the image to scale the relative numbers back to the original size
         img_height, img_width =img.shape[0], img.shape[1]
         
-        #creates the label path to the given image_path
+       #creates the label path to the given image_path
         original_label_path = (pic_path.split('.jpg')[0] + '.txt').replace('images', 'labels')
         
-        #load manual labels
+       #load manual labels
         original_labels = np.genfromtxt(original_label_path, delimiter=' ')
 
-    #load coordinates: 
-        #put the relative coordinates back to absolute coordinates depending on their rotation:
+   #load coordinates: 
+       #put the relative coordinates back to absolute coordinates depending on their rotation:
         pos_man = np.c_[original_labels[:, 1] * img_width, original_labels[:, 2] * img_height]           
         
         boxes = detect.detect_image(model, img, conf_thres=conf_thres, nms_thres=nms_thres)
@@ -396,9 +387,9 @@ def detect_picture(filename="R1_P35_8_90",
             
         boxes=np.round(boxes,decimals=2)
         
-        pos_pred = np.c_[(boxes[:, 0] + boxes[:, 2])/2, (boxes[:, 1] + boxes[:, 3])/2] #Umrechnung der Koordinaten auf die Mitte der Box.
+        pos_pred = np.c_[(boxes[:, 0] + boxes[:, 2])/2, (boxes[:, 1] + boxes[:, 3])/2] #recalculation of the midpoints of the coordinates
         
-        #store the predicted coordinates in a pred_label file: 
+       #store the predicted coordinates in a pred_label file: 
         predicted_labels = np.zeros((pos_pred.shape[0], 5))
         predicted_labels[:, 0] = boxes[:,5]  # Copy class labels
         predicted_labels[:, 2] = (boxes[:, 1] + boxes[:, 3]) / (2 * img_height) # Normalize x_center and y_center
@@ -406,7 +397,7 @@ def detect_picture(filename="R1_P35_8_90",
         predicted_labels[:, 3] = (boxes[:, 2] - boxes[:, 0]) / img_width # Normalize width and height
         predicted_labels[:, 4] = (boxes[:, 3] - boxes[:, 1]) / img_height
 
-        #save the predicted labels in a new file
+       #save the predicted labels in a new file
         if pred_label_path is None:
             pred_label_path = original_label_path.replace('labels', 'predicted_labels')
         else: 
@@ -415,7 +406,7 @@ def detect_picture(filename="R1_P35_8_90",
             
             pred_label_path_file = os.path.join(pred_label_path, filename) + '.txt'
         
-         # Save predicted labels to a new file this way to influence the float length. 
+       # Save predicted labels to a new file this way to influence the float length. 
         with open(pred_label_path_file, 'w') as f: 
             for row in predicted_labels:
                 f.write(f"{int(row[0])} {row[1]:.6f} {row[2]:.6f} {row[3]:.2f} {row[4]:.2f}\n") #lets round the predicted coordinates.
@@ -439,7 +430,7 @@ def detect_picture(filename="R1_P35_8_90",
             stat.print_values() 
 
         if show and stat_all_pics is not None: 
-            stat_all_pics.print_values() ### do we need them twice? maybe only per picture?
+            stat_all_pics.print_values()
         
         filename=f"{filename}.jpg"
         
@@ -452,14 +443,6 @@ def detect_picture(filename="R1_P35_8_90",
                     show=show,
                     ac_d=ac_d)
                     
-    # #add predicted and actual philopodia ends to the image:
-    #     for pm in pos_man: 
-    #         cv2.circle(img, (int(pm[0]), int(pm[1])), 3, color=(0, 255, 0)) #green is the manual annotation
-    #     for pa in pos_pred:
-    #         cv2.circle(img, (int(pa[0]), int(pa[1])), 3, color=(0, 0, 255)) #blue is the predicted annotation
-    #     plt.figure()
-    #     plt.imshow(img)
-
     else:
         if show: 
             print(f'{filename} is R3 data and not annotated')
@@ -471,6 +454,7 @@ def detect_picture(filename="R1_P35_8_90",
     return stat_all_pics
 
 #time functions 
+
 # recalculates time from the format d/h/m/s to seconds
 def time_to_seconds(time_str):
     days, hours, minutes, seconds = 0, 0, 0, 0
@@ -508,6 +492,7 @@ def read_and_clean_csv(file_path):
     df['training_time_seconds'] = df['training_time'].apply(time_to_seconds)
     df['ev_time_seconds'] = df['ev_time'].apply(time_to_seconds)
     return df
+
 ### testing
 
 #example of using the function vis_picture:

@@ -1,4 +1,4 @@
-# general instructions 
+# General Instructions 
 
 ### Install via pip
 

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#Vinzent Aschir 18.10.2024: 
+#Vinzent Aschir 18.01.205: 
 
 #this fucntion splits data dependent on the given arguments into train and validation data.
 #should the validationset contain different data? 
